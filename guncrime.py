@@ -8,7 +8,6 @@ def collect_data():
         if len(i) > 5:
             i[2] = i[2] + i[3]
             i.remove(i[3])
-        print(i)
         if not i[2] in crime[i[1]]:
             crime[i[1]][i[2]] = []
             crime[i[1]][i[2]].append([i[0], i[3], i[4]])
@@ -17,4 +16,4 @@ def collect_data():
     return crime
 # data is in {'year':{'state':[month, kill, injured]}}
 
-print(collect_data())
+collect_data()
