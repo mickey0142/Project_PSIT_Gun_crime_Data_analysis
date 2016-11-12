@@ -21,12 +21,11 @@ def collect_data():
 
 def numberofcrime():
     """get data that what state have the highest number of crime and that number"""
-    data = collect_data()
+    data = collect_data()# move collect_data() into main function and call it from there then just put that variable into this function
     number = {}
-    for i in data:
+    for i in data:# change data into list of year that you want to use
         for j in data[i]:
             for k in data[i][j]:
-                print(k)
                 if not k[0] in number:
                     number[k[0]] = 1
                 else:
