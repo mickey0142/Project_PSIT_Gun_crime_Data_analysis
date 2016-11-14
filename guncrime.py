@@ -24,15 +24,32 @@ def numberofcrime():
     data = collect_data()# move collect_data() into main function and call it from there then just put that variable into this function
     number = {}
     for i in data:# change data into list of year that you want to use
+        number[i] = {}
         for j in data[i]:
+            number[i][j] = {}
             for k in data[i][j]:
-                if not k[0] in number:
-                    number[k[0]] = 1
+                if not k[0] in number[i][j]:
+                    number[i][j][k[0]] = 1
                 else:
-                    number[k[0]] += 1
-    number["all_year"] = 0
+                    number[i][j][k[0]] += 1
+    all_year = {}
     for i in number:
+        all_year[i] = {}
+        for j in number[i]:
+            for k in number[i][j]:
+                print(k)
+                if not k in all_year[i]:
+                    all_year[i][k] = number[i][j][k]
+                else:
+                    all_year[i][k] += number[i][j][k]
+    all_year['sum_year'] = 0
+    for i in all_year:
         if i.isdigit():
-            number["all_year"] += number[i]
+            all_year[i]['one_year'] = 0
+            for j in all_year[i]:
+                if j.isdigit():
+                    all_year['sum_year'] += all_year[i][j]
+                    all_year[i]['one_year'] += all_year[i][j]
+    print(all_year)
 
 numberofcrime()
