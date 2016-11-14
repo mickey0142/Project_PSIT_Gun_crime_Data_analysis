@@ -37,7 +37,6 @@ def numberofcrime():
         all_year[i] = {}
         for j in number[i]:
             for k in number[i][j]:
-                print(k)
                 if not k in all_year[i]:
                     all_year[i][k] = number[i][j][k]
                 else:
@@ -50,6 +49,7 @@ def numberofcrime():
                 if j.isdigit():
                     all_year['sum_year'] += all_year[i][j]
                     all_year[i]['one_year'] += all_year[i][j]
-    print(all_year)
+    return number# half raw data contain how many crime happen each state and each month
+    return all_year# data contain how many crime happen each month each year and all
 
 numberofcrime()
