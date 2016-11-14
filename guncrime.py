@@ -53,7 +53,10 @@ def numberofcrime():
     return number, all_year
     #number -> data contain how many crime happen each state and each month
     #all_year -> data contain how many crime happen each month each year and all
-# def sort(): sort function
+def sort(var):
+    """sort data and save top 5 data into variable to send to another function"""
+    for i in var:
+        #do something here
 
 def graph():
     """use data to plot graph"""
