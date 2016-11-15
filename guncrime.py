@@ -20,11 +20,10 @@ def collect_data():
     return crime
 # data is in {'year':{'state':[month, kill, injured]}}
 
-def numberofcrime():
+def numberofcrime(cal, choose, data):
     """get data that what state have the highest number of crime and that number"""
-    data = collect_data()# move collect_data() into main function and call it from there then just put that variable into this function
     number = {}
-    for i in data:# change data into list of year from input change this after main function
+    for i in cal:# change data into list of year from input change this after main function
         number[i] = {}#set dict year
         for j in data[i]:#loop in data in dict "i" year
             number[i][j] = {}#set state dict
@@ -50,7 +49,13 @@ def numberofcrime():
                 if j.isdigit():# check condition to fix some bug
                     all_year['sum_year'] += all_year[i][j]# add numberofcrime in sum of all year
                     all_year[i]['one_year'] += all_year[i][j]# add numberofcrime in "i" year
-    return number, all_year
+    if len(cal) > 1:
+        if choose == "all":
+            return sort_all(all_year)
+        elif choose == "sum":
+            return sort_sum(all_year)
+    else:
+        return sort_state(number)
     #number -> data contain how many crime happen each state and each month
     #all_year -> data contain how many crime happen each month each year and all
 
@@ -122,21 +127,74 @@ def numberofinjured():
     #number -> data contain how many injured happen each state and each month
     #all_year -> data contain how many injured happen each month each year and all
 
-def sort(var):
-    """sort data and save top 5 data into variable to send to another function"""
-    for i in var:
-        #do something here
+def sort_all(var):
+    """sort data all_year and save into variable to send to another function"""
+    cut_data = []
+    temp3 = sorted(list(var.keys()))
+    for i in temp3:
+        if i.isdigit():
+            if i == '2016':
+                temp2 = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
+            else:
+                temp2 = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']
+            temp = [var[i][j] for j in temp2 if j.isdigit()]
+            cut_data.append(temp)
+    return cut_data# this variable contain data from 2014 to 2016 and sort month data from jan to dec
 
-def graph():
-    """use data to plot graph with pygal module here"""
-    number, all_year = numberofcrime()
-    use = list(all_year['2013'].values())
-    use2 = list(all_year['2014'].values())
+def sort_sum(var):
+    """sort data all_year and choose only sum of every year to save into variable"""
+    cut_data = []
+    temp3 = sorted(list(var.keys()))
+    for i in temp3:
+        if i.isdigit():
+            cut_data.append(var[i]['one_year'])
+    return cut_data
+
+# def sort_state(var):
+
+def graph_3year(data):
+    """use data to plot graph 3 year with pygal module here"""
     line_chart = pygal.Line()
-    line_chart.title = 'guncrime'
-    line_chart.x_labels = map(str, range(1, 13))
-    line_chart.add('2013', use)
-    line_chart.add('2014', use2)
-    line_chart.render_to_file('test.svg')
+    line_chart.title = 'Gun crime for each month in 2014 - 2016'# change word later
+    line_chart.x_labels = map(str, range(1, 13))# change x label here
+    count = 0
+    y_data = ['2014', '2015', '2016']
+    for i in data:
+        line_chart.add(y_data[count], data[count])
+        count += 1
+    line_chart.render_to_file('all_year.svg')
 
-numberofcrime()
+def graph_sum(data):
+    line_chart = pygal.Line()
+    line_chart.title = 'Gun crime for each year in 2014 - 2016'
+    line_chart.x_labels = map(str, range(2014, 2017))# change x label here
+    line_chart.add('numberofcrime death injured' , data)
+    line_chart.render_to_file('sum_year.svg')
+
+#def graph(data):
+
+def main():
+    """get input to choose what year to show here"""
+    choose = input("2014, 2015, 2016, all or sum : ")
+    data = collect_data()
+    cal = []
+    if choose.isdigit():
+        cal.append(choose)
+    elif choose == "all":
+        cal = ["2014", "2015", "2016"]
+    elif choose == "sum":
+        cal = ["2014", "2015", "2016"]
+    output_data = []
+    output_data.append(numberofcrime(cal, choose, data))
+    #output_data.append() add another function here
+    if len(cal) > 1 and choose == "all":# if choose all year call function for 3 year
+        graph_3year(output_data[0])
+        #graph_3year(output_data[1])# make graph of dead
+        #graph_3year(output_data[2])# make graph of injured
+    elif len(cal) > 1 and choose == "sum":
+        graph_sum(output_data[0])
+    else:# if choose one year call function for 1 year
+        for i in output_data:
+            graph(i)
+
+main()
