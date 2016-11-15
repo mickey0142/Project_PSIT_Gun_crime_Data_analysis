@@ -59,7 +59,7 @@ def numberofcrime(cal, choose, data):
     #number -> data contain how many crime happen each state and each month
     #all_year -> data contain how many crime happen each month each year and all
 
-def numberofdead():
+def numberofdead(cal, choose, data):
     """collect data about dead in incident and save it to variable"""
     number = {}
     for i in cal:# loop in list of input
@@ -92,7 +92,7 @@ def numberofdead():
     #number -> data contain how many dead happen each state and each month
     #all_year -> data contain how many dead happen each month each year and all
 
-def numberofinjured():
+def numberofinjured(cal, choose, data):
     """collect data about injured in incident and save it to variable"""
     number = {}
     for i in cal:# loop in input
