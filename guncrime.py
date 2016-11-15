@@ -3,7 +3,7 @@ import pygal
 def collect_data():
     """get data from file .txt into variable 'crime'"""
     file = open('alldata.txt')
-    crime = {'2013':{}, '2014':{}, '2015':{}, '2016':{}}
+    crime = {'2014':{}, '2015':{}, '2016':{}}
     for i in file:
         i = i.split()
         if len(i) > 5:
