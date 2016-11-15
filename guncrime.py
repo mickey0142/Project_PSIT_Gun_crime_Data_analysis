@@ -50,25 +50,41 @@ def numberofcrime():
                 if j.isdigit():# check condition to fix some bug
                     all_year['sum_year'] += all_year[i][j]# add numberofcrime in sum of all year
                     all_year[i]['one_year'] += all_year[i][j]# add numberofcrime in "i" year
-    return number, all_year
+    # return number, all_year
+    return sort_all(all_year)
     #number -> data contain how many crime happen each state and each month
     #all_year -> data contain how many crime happen each month each year and all
 
-def sort(var):
-    """sort data and save top 5 data into variable to send to another function"""
-    for i in var:
-        #do something here
+def sort_all(var):
+    """sort data all_year and save into variable to send to another function"""
+    cut_data = []
+    temp3 = sorted(list(var.keys()))
+    for i in temp3:
+        if i.isdigit():
+            if i == '2016':
+                temp2 = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
+            else:
+                temp2 = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']
+            temp = [var[i][j] for j in temp2 if j.isdigit()]
+            cut_data.append(temp)
+    return cut_data# this variable contain data from 2013 to 2016 and sort month data from jan to dec
+    #maybe def two function sort in one year(12month) and sort in >1 year and graph too
 
 def graph():
     """use data to plot graph with pygal module here"""
-    number, all_year = numberofcrime()
-    use = list(all_year['2013'].values())
-    use2 = list(all_year['2014'].values())
+    all_year = numberofcrime()
     line_chart = pygal.Line()
     line_chart.title = 'guncrime'
-    line_chart.x_labels = map(str, range(1, 13))
-    line_chart.add('2013', use)
-    line_chart.add('2014', use2)
+    line_chart.x_labels = map(str, range(1, 13))# change x label here
+    count = 0
+    y_data = ['2013', '2014', '2015', '2016']
+    for i in all_year:
+        line_chart.add(y_data[count], all_year[count])
+        count += 1
     line_chart.render_to_file('test.svg')
 
-numberofcrime()
+def main():
+    """get input to choose what year to show here"""
+    choose = input()
+
+graph()
