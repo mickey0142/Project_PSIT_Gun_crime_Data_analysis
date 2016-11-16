@@ -162,24 +162,28 @@ def sort_sum(var):
 
 # def sort_state(var):
 
-def graph_3year(data):
+def graph_3year(data, name):
     """use data to plot graph 3 year with pygal module here"""
     line_chart = pygal.Line()
-    line_chart.title = 'Gun crime for each month in 2014 - 2016'# change word later
+    line_chart.title = 'Number of ' + name +' for each month in 2014 - 2016'# change word later
     line_chart.x_labels = map(str, range(1, 13))# change x label here
     count = 0
     y_data = ['2014', '2015', '2016']
     for i in data:
         line_chart.add(y_data[count], data[count])
         count += 1
-    line_chart.render_to_file('all_year.svg')
+    line_chart.render_to_file('all_year_' + name + '.svg')
 
 def graph_sum(data):
+    """use data to plot graph sum of each year here"""
     line_chart = pygal.Line()
     line_chart.title = 'Gun crime for each year in 2014 - 2016'
     line_chart.x_labels = map(str, range(2014, 2017))# change x label here
+    line_name = ['Crime', 'Death', 'Injured']
+    count = 0
     for i in data:
-        line_chart.add('numberofcrime death injured' , i)
+        line_chart.add('Number of '+line_name[count] , i)
+        count += 1
     line_chart.render_to_file('sum_year.svg')
 
 #def graph(data):
@@ -200,9 +204,9 @@ def main():
     output_data.append(numberofinjured(cal, choose, data))
     output_data.append(numberofdead(cal, choose, data))
     if len(cal) > 1 and choose == "all":# if choose all year call function for 3 year
-        graph_3year(output_data[0])
-        graph_3year(output_data[1])# make graph of dead
-        graph_3year(output_data[2])# make graph of injured
+        graph_3year(output_data[0], 'Incident')
+        graph_3year(output_data[1], 'Death')# make graph of dead
+        graph_3year(output_data[2], 'Injured')# make graph of injured
     elif len(cal) > 1 and choose == "sum":
         graph_sum(output_data)
     else:# if choose one year call function for 1 year
