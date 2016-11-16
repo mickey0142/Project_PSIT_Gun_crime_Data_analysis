@@ -55,7 +55,7 @@ def numberofcrime(cal, choose, data):
         elif choose == "sum":
             return sort_sum(all_year)
     else:
-        return sort_state(number)
+        return sort_state(number, choose)
     #number -> data contain how many crime happen each state and each month
     #all_year -> data contain how many crime happen each month each year and all
 
@@ -94,7 +94,7 @@ def numberofdead(cal, choose, data):
         elif choose == "sum":
             return sort_sum(all_year)
     else:
-        return sort_state(number)
+        return sort_state(number, choose)
     #number -> data contain how many dead happen each state and each month
     #all_year -> data contain how many dead happen each month each year and all
 
@@ -133,7 +133,7 @@ def numberofinjured(cal, choose, data):
         elif choose == "sum":
             return sort_sum(all_year)
     else:
-        return sort_state(number)
+        return sort_state(number, choose)
     #number -> data contain how many injured happen each state and each month
     #all_year -> data contain how many injured happen each month each year and all
 
@@ -160,7 +160,24 @@ def sort_sum(var):
             cut_data.append(var[i]['one_year'])
     return cut_data
 
-# def sort_state(var):
+def sort_state(var, choose):
+    """pick data from variable and save only top 5 state into another variable"""
+    cut_data = []
+    cal = sorted(list(var[choose].keys()))
+    for i in cal:
+        if i == '2016':
+            temp2 = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
+        else:
+            temp2 = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']
+        temp = []
+        for j in temp2:
+            if j in var[choose][i]:
+                temp3 = var[choose][i][j]
+            else:
+                temp3 = None
+            temp.append(temp3)
+        cut_data.append(temp)
+    return cut_data
 
 def graph_3year(data, name):
     """use data to plot graph 3 year with pygal module here"""
@@ -186,7 +203,16 @@ def graph_sum(data):
         count += 1
     line_chart.render_to_file('sum_year.svg')
 
-#def graph(data):
+def graph(data, name, choose, state_name):
+    """use data to plot graph of top state"""
+    line_chart = pygal.Line()
+    line_chart.title = 'Number of ' + name +' in ' + choose # change word later
+    line_chart.x_labels = map(str, range(1, 13))# change x label here
+    count = 0
+    for i in data:
+        line_chart.add(state_name[count], data[count])
+        count += 1
+    line_chart.render_to_file('state_' + name + '.svg')
 
 def main():
     """get input to choose what year to show here"""
@@ -210,7 +236,9 @@ def main():
     elif len(cal) > 1 and choose == "sum":
         graph_sum(output_data)
     else:# if choose one year call function for 1 year
-        for i in output_data:
-            graph(i)
+        state_name = sorted(list(data[choose].keys()))
+        graph(output_data[0], 'Incident', choose, state_name)
+        graph(output_data[1], 'Death', choose, state_name)
+        graph(output_data[2], 'Injured', choose, state_name)
 
 main()
