@@ -88,7 +88,13 @@ def numberofdead(cal, choose, data):
                 if j.isdigit():# check condition to fix some bug
                     all_year['sum_year'] += all_year[i][j]# add numberofdead in sum of all year
                     all_year[i]['one_year'] += all_year[i][j]# add numberofdead in "i" year
-    return number, all_year
+    if len(cal) > 1:
+        if choose == "all":
+            return sort_all(all_year)
+        elif choose == "sum":
+            return sort_sum(all_year)
+    else:
+        return sort_state(number)
     #number -> data contain how many dead happen each state and each month
     #all_year -> data contain how many dead happen each month each year and all
 
@@ -121,7 +127,13 @@ def numberofinjured(cal, choose, data):
                 if j.isdigit():# check condition to fix some bug
                     all_year['sum_year'] += all_year[i][j]# add numberofinjured in sum of all year
                     all_year[i]['one_year'] += all_year[i][j]# add numberofinjured in "i" year
-    return number, all_year
+    if len(cal) > 1:
+        if choose == "all":
+            return sort_all(all_year)
+        elif choose == "sum":
+            return sort_sum(all_year)
+    else:
+        return sort_state(number)
     #number -> data contain how many injured happen each state and each month
     #all_year -> data contain how many injured happen each month each year and all
 
@@ -166,7 +178,8 @@ def graph_sum(data):
     line_chart = pygal.Line()
     line_chart.title = 'Gun crime for each year in 2014 - 2016'
     line_chart.x_labels = map(str, range(2014, 2017))# change x label here
-    line_chart.add('numberofcrime death injured' , data)
+    for i in data:
+        line_chart.add('numberofcrime death injured' , i)
     line_chart.render_to_file('sum_year.svg')
 
 #def graph(data):
@@ -184,13 +197,14 @@ def main():
         cal = ["2014", "2015", "2016"]
     output_data = []
     output_data.append(numberofcrime(cal, choose, data))
-    #output_data.append() add another function here
+    output_data.append(numberofinjured(cal, choose, data))
+    output_data.append(numberofdead(cal, choose, data))
     if len(cal) > 1 and choose == "all":# if choose all year call function for 3 year
         graph_3year(output_data[0])
-        #graph_3year(output_data[1])# make graph of dead
-        #graph_3year(output_data[2])# make graph of injured
+        graph_3year(output_data[1])# make graph of dead
+        graph_3year(output_data[2])# make graph of injured
     elif len(cal) > 1 and choose == "sum":
-        graph_sum(output_data[0])
+        graph_sum(output_data)
     else:# if choose one year call function for 1 year
         for i in output_data:
             graph(i)
