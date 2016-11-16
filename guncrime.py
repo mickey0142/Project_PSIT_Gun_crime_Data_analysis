@@ -177,7 +177,24 @@ def sort_state(var, choose):
                 temp3 = None
             temp.append(temp3)
         cut_data.append(temp)
-    return cut_data
+    temp4 = {}
+    count = 0
+    for i in cut_data:
+        for j in i:
+            temp4[cal[count]] = 0
+            if j != None:
+                temp4[cal[count]] += j
+        count += 1
+    cut_data2 = []
+    state_name = []
+    value = list(temp4.values())
+    key = list(temp4.keys())
+    for i in range(10):
+        temp5 = value.index(max(value))
+        cut_data2.append(cut_data[temp5])
+        value.pop(temp5)
+        state_name.append(key.pop(temp5))
+    return cut_data2, state_name
 
 def graph_3year(data, name):
     """use data to plot graph 3 year with pygal module here"""
@@ -212,7 +229,7 @@ def graph(data, name, choose, state_name):
     for i in data:
         line_chart.add(state_name[count], data[count])
         count += 1
-    line_chart.render_to_file('state_' + name + '.svg')
+    line_chart.render_to_file('state_' + name + choose + '.svg')
 
 def main():
     """get input to choose what year to show here"""
@@ -226,9 +243,21 @@ def main():
     elif choose == "sum":
         cal = ["2014", "2015", "2016"]
     output_data = []
-    output_data.append(numberofcrime(cal, choose, data))
-    output_data.append(numberofinjured(cal, choose, data))
-    output_data.append(numberofdead(cal, choose, data))
+    if len(cal) > 1:
+        output_data.append(numberofcrime(cal, choose, data))
+        output_data.append(numberofinjured(cal, choose, data))
+        output_data.append(numberofdead(cal, choose, data))
+    else:
+        state_name = []
+        temp, temp2 = numberofcrime(cal, choose, data)
+        output_data.append(temp)
+        state_name.append(temp2)
+        temp, temp2 = numberofinjured(cal, choose, data)
+        output_data.append(temp)
+        state_name.append(temp2)
+        temp, temp2 = numberofdead(cal, choose, data)
+        output_data.append(temp)
+        state_name.append(temp2)
     if len(cal) > 1 and choose == "all":# if choose all year call function for 3 year
         graph_3year(output_data[0], 'Incident')
         graph_3year(output_data[1], 'Death')# make graph of dead
@@ -236,9 +265,8 @@ def main():
     elif len(cal) > 1 and choose == "sum":
         graph_sum(output_data)
     else:# if choose one year call function for 1 year
-        state_name = sorted(list(data[choose].keys()))
-        graph(output_data[0], 'Incident', choose, state_name)
-        graph(output_data[1], 'Death', choose, state_name)
-        graph(output_data[2], 'Injured', choose, state_name)
+        graph(output_data[0], 'Incident', choose, state_name[0])
+        graph(output_data[1], 'Death', choose, state_name[1])
+        graph(output_data[2], 'Injured', choose, state_name[2])
 
 main()
